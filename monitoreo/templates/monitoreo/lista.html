@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitoreo de Acidificación</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fd7c94; }
+        .hero-header { background: linear-gradient(135deg, #f77ed8, #e17cf5); color: rgb(243, 193, 230); border-radius: 0.5rem; }
+        .table-hover tbody tr:hover { background-color: #eeabf7; }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <div class="hero-header p-4 mb-4 shadow-sm d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h3 fw-bold mb-1">🌊 Monitoreo de Acidificación del Agua</h1>
+            <p class="mb-0 text-white-50">Panel de control y registros de laboratorio</p>
+        </div>
+        <a href="{% url 'crear_registro' %}" class="btn btn-light fw-semibold text-primary shadow-sm">+ Nuevo Registro</a>
+    </div>
+
+    <form method="get" class="input-group mb-4 shadow-sm">
+        <input type="text" name="q" class="form-control form-control-lg" placeholder="Buscar por equipo o fecha..." value="{{ request.GET.q|default:'' }}">
+        <button class="btn btn-primary px-4" type="submit">Buscar</button>
+    </form>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <table class="table table-hover text-center align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="py-3">Equipo / Grupo</th>
+                        <th>Fecha y Hora</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reg in registros %}
+                    <tr>
+                        <td><span class="fw-semibold text-dark">{{ reg.nombre_equipo }}</span></td>
+                        <td class="text-muted">{{ reg.fecha_registro }}</td>
+                        <td>
+                            <a href="{% url 'detalle_registro' reg.pk %}" class="btn btn-outline-primary btn-sm px-3">Ver Detalle</a>
+                            <a href="{% url 'editar_registro' reg.pk %}" class="btn btn-outline-warning btn-sm px-3">Editar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-muted py-5">
+                            <p class="mb-1">No hay registros de laboratorio guardados todavía.</p>
+                            <a href="{% url 'crear_registro' %}" class="btn btn-sm btn-primary mt-2">¡Crea el primero!</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
